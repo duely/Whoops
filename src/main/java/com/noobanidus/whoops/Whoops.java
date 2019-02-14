@@ -27,7 +27,7 @@ public class Whoops {
 
     @SuppressWarnings("unused")
     public final static Logger LOG = LogManager.getLogger(MODID);
-    public final static Configuration CONFIG = new Configuration(new File("config", "whoops.cfg"), true);
+
     @SidedProxy(modId = MODID, clientSide = "com.noobanidus.whoops.proxy.ClientProxy", serverSide = "com.noobanidus.whoops.proxy.CommonProxy")
     public static ISidedProxy proxy;
 

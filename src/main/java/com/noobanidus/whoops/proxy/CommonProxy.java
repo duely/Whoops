@@ -17,7 +17,6 @@ public class CommonProxy implements ISidedProxy {
 
     public void loadComplete(FMLLoadCompleteEvent event) {
         Whoops.LOG.info("Whoops: Load Complete.");
-        Whoops.CONFIG.save();
     }
 
     public void serverStarting(FMLServerStartingEvent event) {
