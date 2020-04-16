@@ -1,11 +1,10 @@
 buildscript {
     repositories {
-        mavenLocal()
-        maven { url = 'http://files.minecraftforge.net/maven' }
-        jcenter()
         mavenCentral()
+        mavenLocal()
         maven {
-            url 'https://dogforce-games.com/maven'
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
         }
         maven {
             name = "sonatype"
@@ -13,7 +12,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.165-run-configs-rework', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.+', changing: true
     }
 }
 plugins {
@@ -30,6 +29,14 @@ archivesBaseName = "whoops"
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
+
+configurations {
+    shade
+}
+
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
 
 minecraft {
     mappings channel: 'snapshot', version: "${mcp_mappings}"
@@ -90,50 +97,47 @@ minecraft {
     }
 }
 
-configurations {
-    shade
-}
-
-sourceSets.main.resources {
-    srcDir 'src/generated/resources'
-}
-
 repositories {
-    maven {
-        url "https://maven.blamejared.com"
-    }
     maven {
         url "http://maven.tterrag.com/"
     }
     maven { // JEI
         url "http://dvs1.progwml6.com/files/maven"
     }
+    maven {
+        name = "Jared"
+        url = "https://maven.blamejared.com"
+    }
+    maven {
+        name "curios"
+        url "https://maven.theillusivec4.top/"
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title": "whoops",
+                "Specification-Vendor": "Noobanidus",
+                "Specification-Version": "1", // We are version 1 of ourselves
+                "Implementation-Title": project.name,
+                "Implementation-Version": "${version}",
+                "Implementation-Vendor" :"noobanidus",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    compile fg.deobf("vazkii.patchouli:Patchouli:1.1-25.117") { transitive = false }
+    compile fg.deobf("vazkii.patchouli:Patchouli:1.15.2-1.2-30.156") { transitive = false }
     compile fg.deobf("vazkii.botania:Botania:${botania_version}")
 
+    compileOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2")
 
-    def noobutil = "noobanidus.libs:noobutil:${minecraft_version}-${noobutil_version}"
-    implementation fg.deobf(noobutil)
-    shade noobutil
+    compileOnly fg.deobf("top.theillusivec4.curios:curios:FORGE-1.15.2-2.0:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios:FORGE-1.15.2-2.0")
 }
-
-shadowJar {
-    configurations = [project.configurations.shade]
-    relocate 'noobanidus.libs.noobutil', 'noobanids.libs.repack_whoops.noobutil'
-    classifier ''
-}
-
-jar.classifier = 'nodep'
-
-reobf {
-    shadowJar {}
-}
-
-build.dependsOn reobfShadowJar
-
 
