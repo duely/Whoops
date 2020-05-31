@@ -35,6 +35,10 @@ public class Whoops {
   public static void onDaisyRightClick(PlayerInteractEvent.RightClickBlock event) {
     World world = event.getWorld();
 
+    if (event.getHand() != Hand.MAIN_HAND) {
+      return;
+    }
+
     PlayerEntity player = event.getPlayer();
     if (player instanceof FakePlayer || player.isSneaking()) {
       return;
@@ -66,7 +70,7 @@ public class Whoops {
 
       Block block = iBlock.getBlock();
 
-      outer: for (int x = -1; x <= 1; x++) {
+      for (int x = -1; x <= 1; x++) {
         for (int z = -1; z <= 1; z++) {
           BlockPos potential = pos.add(x, 0, z);
           if (potential.equals(pos)) {
@@ -90,7 +94,7 @@ public class Whoops {
             }
             event.setCanceled(true);
             event.setCancellationResult(ActionResultType.SUCCESS);
-            break outer;
+            return;
           }
         }
       }
