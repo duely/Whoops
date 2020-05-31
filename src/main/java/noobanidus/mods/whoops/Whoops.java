@@ -89,9 +89,6 @@ public class Whoops {
 
           if ((stateAt.isReplaceable(context) || blockAt.isAir(stateAt, world, potential)) && state.isValidPosition(world, potential)) {
             iBlock.tryPlace(context);
-            if (!player.isCreative()) {
-              item.shrink(1);
-            }
             event.setCanceled(true);
             event.setCancellationResult(ActionResultType.SUCCESS);
             return;
